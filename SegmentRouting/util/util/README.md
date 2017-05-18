@@ -13,7 +13,7 @@
  * __init__: gathers some global variables and functions
  * Dijkstra.py: Simple framework that will perform the path expansion,
                 when there is a requirement with the * symbol
- * DijkstraDag.py: framework that contains the Simplifier that computes the
+ * simplifier.py: framework that contains the Simplifier that computes the
                    minimum label stack
  * Quagga.py: Extension to Nanonet to represent a Quagga routers, will
               generate the config files and start the Quagga daemons
