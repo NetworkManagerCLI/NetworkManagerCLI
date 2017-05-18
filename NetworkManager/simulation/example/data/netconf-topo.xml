@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+
+    <config>
+      <fibbing xmlns="http://tail-f.com/ns/example/fibbing"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <network>
+          <restart> 10 </restart>
+          <!-- Routers -->
+          <router nc:operation="replace">
+            <name>*</name>
+          </router>
+
+          <!-- OSPF Routers -->
+           <router nc:operation="replace">
+             <name>HOUS</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.2</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>SEAT</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.3</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>WASH</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.4</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>LOSA</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.5</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>NEWY</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.6</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>CHIC</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.7</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>SALT</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.8</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>KANS</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.9</router-id>
+             </ospf>
+
+           </router>
+           <router nc:operation="replace">
+             <name>ATLA</name>
+             <ospf>
+               <enable>true</enable>
+               <router-id>0.0.0.10</router-id>
+             </ospf>
+
+           </router>
+
+             <link nc:operation="replace">
+               <name>LOSAToSEAT</name>
+               <src>
+                 <name>LOSA</name>
+                  <ip>198.0.1.1/24</ip>
+               </src>
+               <dest>
+                 <name>SEAT</name>
+                 <ip>198.0.1.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>10</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>LOSAToSALT</name>
+               <src>
+                 <name>LOSA</name>
+                  <ip>198.0.2.1/24</ip>
+               </src>
+               <dest>
+                 <name>SALT</name>
+                 <ip>198.0.2.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>SEATToSALT</name>
+               <src>
+                 <name>SEAT</name>
+                  <ip>198.0.3.1/24</ip>
+               </src>
+               <dest>
+                 <name>SALT</name>
+                 <ip>198.0.3.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>SALTToKANS</name>
+               <src>
+                 <name>SALT</name>
+                  <ip>198.0.4.1/24</ip>
+               </src>
+               <dest>
+                 <name>KANS</name>
+                 <ip>198.0.4.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>KANSToCHIC</name>
+               <src>
+                 <name>KANS</name>
+                  <ip>198.0.5.1/24</ip>
+               </src>
+               <dest>
+                 <name>CHIC</name>
+                 <ip>198.0.5.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>CHICToNEWY</name>
+               <src>
+                 <name>CHIC</name>
+                  <ip>198.0.6.1/24</ip>
+               </src>
+               <dest>
+                 <name>NEWY</name>
+                 <ip>198.0.6.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>NEWYToWASH</name>
+               <src>
+                 <name>NEWY</name>
+                  <ip>198.0.7.1/24</ip>
+               </src>
+               <dest>
+                 <name>WASH</name>
+                 <ip>198.0.7.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>WASHToATLA</name>
+               <src>
+                 <name>WASH</name>
+                  <ip>198.0.8.1/24</ip>
+               </src>
+               <dest>
+                 <name>ATLA</name>
+                 <ip>198.0.8.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>ATLAToHOUS</name>
+               <src>
+                 <name>ATLA</name>
+                  <ip>198.0.9.1/24</ip>
+               </src>
+               <dest>
+                 <name>HOUS</name>
+                 <ip>198.0.9.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>HOUSToLOSA</name>
+               <src>
+                 <name>HOUS</name>
+                  <ip>198.0.10.1/24</ip>
+               </src>
+               <dest>
+                 <name>LOSA</name>
+                 <ip>198.0.10.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>WASHToCHIC</name>
+               <src>
+                 <name>WASH</name>
+                  <ip>198.0.11.1/24</ip>
+               </src>
+               <dest>
+                 <name>CHIC</name>
+                 <ip>198.0.11.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>ATLAToCHIC</name>
+               <src>
+                 <name>ATLA</name>
+                  <ip>198.0.12.1/24</ip>
+               </src>
+               <dest>
+                 <name>CHIC</name>
+                 <ip>198.0.12.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+             <link nc:operation="replace">
+               <name>HOUSToKANS</name>
+               <src>
+                 <name>HOUS</name>
+                  <ip>198.0.13.1/24</ip>
+               </src>
+               <dest>
+                 <name>KANS</name>
+                 <ip>198.0.13.2/24</ip>
+               </dest>
+               <bw>100</bw>
+               <cost>1</cost>
+             </link>
+
+           <!-- Declare  -->
+            <ospf-link-config nc:operation="replace">
+              <link-name>LOSAToSEAT</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>LOSAToSALT</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>SEATToSALT</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>SALTToKANS</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>KANSToCHIC</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>CHICToNEWY</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>NEWYToWASH</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>WASHToATLA</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>ATLAToHOUS</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>HOUSToLOSA</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>WASHToCHIC</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>ATLAToCHIC</link-name>
+            </ospf-link-config>
+            <ospf-link-config nc:operation="replace">
+              <link-name>HOUSToKANS</link-name>
+            </ospf-link-config>
+
+           <!-- Controller -->
+           <fibbing-controller>
+           <links nc:operation="replace">
+            <name>C1ToHOUS</name>
+             <controller>
+               <name>C1</name>
+               <ip>168.0.1.1/24</ip>
+             </controller>
+             <router>
+               <name>HOUS</name>
+               <ip>168.0.1.2/24</ip>
+             </router>
+          </links>
+         </fibbing-controller>
+
+            <hosts-link nc:operation="replace">
+              <name>HawaiiToLOSA</name>
+              <host>
+                <name>Hawaii</name>
+                <ip>192.0.1.1/24</ip>
+              </host>
+              <router>
+                <name>LOSA</name>
+                <ip>192.0.1.2/24</ip>
+              </router>
+            </hosts-link>
+            <hosts-link nc:operation="replace">
+              <name>SidneyToLOSA</name>
+              <host>
+                <name>Sidney</name>
+                <ip>192.0.2.1/24</ip>
+              </host>
+              <router>
+                <name>LOSA</name>
+                <ip>192.0.2.2/24</ip>
+              </router>
+            </hosts-link>
+            <hosts-link nc:operation="replace">
+              <name>ChinaToSEAT</name>
+              <host>
+                <name>China</name>
+                <ip>192.0.3.1/24</ip>
+              </host>
+              <router>
+                <name>SEAT</name>
+                <ip>192.0.3.2/24</ip>
+              </router>
+            </hosts-link>
+            <hosts-link nc:operation="replace">
+              <name>LondonToNEWY</name>
+              <host>
+                <name>London</name>
+                <ip>192.0.4.1/24</ip>
+              </host>
+              <router>
+                <name>NEWY</name>
+                <ip>192.0.4.2/24</ip>
+              </router>
+            </hosts-link>
+            <hosts-link nc:operation="replace">
+              <name>AmstToATLA</name>
+              <host>
+                <name>Amst</name>
+                <ip>192.0.5.1/24</ip>
+              </host>
+              <router>
+                <name>ATLA</name>
+                <ip>192.0.5.2/24</ip>
+              </router>
+            </hosts-link>
+            <hosts-link nc:operation="replace">
+              <name>CtrlToHOUS</name>
+              <host>
+                <name>Ctrl</name>
+                <ip>192.0.6.1/24</ip>
+              </host>
+              <router>
+                <name>HOUS</name>
+                <ip>192.0.6.2/24</ip>
+              </router>
+            </hosts-link>
+
+        <main-controller>Ctrl</main-controller>
+
+
+
+
+
+        </network>
+      </fibbing>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>

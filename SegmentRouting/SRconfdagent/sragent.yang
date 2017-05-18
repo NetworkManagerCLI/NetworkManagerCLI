@@ -1,0 +1,71 @@
+module sragent {
+  /* name space */
+  namespace "http://tail-f.com/ns/example/sragent";
+  prefix sragent;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  import tailf-xsd-types {
+    prefix xs;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-yang-types {
+    prefix "yang";
+  }
+
+
+  typedef actions {
+    type enumeration {
+      enum 'add';
+      enum 'delete';
+      enum 'modify';
+    }
+  }
+
+
+  container sragent {
+    list sr-routes{
+      key "destination";
+      leaf destination {
+        type inet:ipv6-prefix;
+        /* destnation prefix of the requirement */
+      }
+
+
+      leaf action {
+        type actions;
+        /*
+          add : new requirement (not already stored),
+                the agent will add ip route for this dest
+          modify: requirement already stored for this dest,
+                the agent will delete old ip route and add the new one
+          delete: requirement already stored for this dest,
+                the agent will delete this router
+        */
+      }
+
+      list routes {
+        key "intf";
+        leaf intf {
+          type string;
+          /* any interface other than loopback (lo) */
+        }
+
+        leaf-list segments {
+          type inet:ipv6-address;
+          ordered-by user;
+          /* an order list of segments (label stacks) */
+        }
+      }
+
+    }
+
+  }
+
+
+}

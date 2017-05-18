@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+
+    <config>
+      <!-- config for mininet -->
+      <!-- name of principal container  -->
+      <segment-routing xmlns="http://tail-f.com/ns/example/segmentrouting"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <network>
+          <!-- modify the restart value to trigger a commit -->
+          <restart>0</restart>
+
+
+        </network>
+        <sr-requirement>
+          <restart>0</restart>
+        </sr-requirement>
+
+      </segment-routing>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>

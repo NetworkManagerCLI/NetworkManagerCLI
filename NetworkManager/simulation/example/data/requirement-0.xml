@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>urn:ietf:params:netconf:base:1.0</capability>
+  </capabilities>
+</hello>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <fibbing xmlns="http://tail-f.com/ns/example/fibbing"
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+      <fibbing-requirement>
+        <restart> 10 </restart>
+          <requirement nc:operation="replace">
+            <name>toHawaii</name>
+            <state>running</state>
+            <dest>Hawaii</dest>
+              <Path>NEWY</Path>
+              <Path>CHIC</Path>
+              <Path>KANS</Path>
+              <Path>SALT</Path>
+              <Path>LOSA</Path>
+          </requirement>
+          <requirement nc:operation="replace">
+            <name>toSidney</name>
+            <state>scheduled</state>
+            <dest>Sidney</dest>
+              <Path>ATLA</Path>
+              <Path>*</Path>
+              <Path>LOSA</Path>
+              <schedule>
+                <Type>time</Type>
+                  <days>Monday</days>
+                  <days>Tuesday</days>
+                  <days>Wednesday</days>
+                  <days>Thursday</days>
+                  <days>Friday</days>
+                  <days>Saturday</days>
+                  <days>Sunday</days>
+                <start-hour>10:00</start-hour>
+                <end-hour>23:30</end-hour>
+
+              </schedule>
+          </requirement>
+      </fibbing-requirement>
+    </fibbing>
+    </config>
+  </edit-config>
+</rpc>
+]]>]]>
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="2">
+  <close-session/>
+</rpc>

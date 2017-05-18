@@ -1,0 +1,39 @@
+Format: 1.8
+Date: Thu, 17 Mar 2016 21:38:18 +0000
+Source: linux-4.5.0-rc7-fibbing
+Binary: linux-image-4.5.0-rc7-fibbing linux-headers-4.5.0-rc7-fibbing linux-libc-dev
+Architecture: source amd64
+Version: 4.5.0-rc7-2
+Distribution: jessie
+Urgency: low
+Maintainer: Anonymous <root@debian-jessie.vagrantup.com>
+Changed-By: Anonymous <root@debian-jessie.vagrantup.com>
+Description:
+ linux-headers-4.5.0-rc7-fibbing - Linux kernel headers for 4.5.0-rc7-fibbing on ${kernel:debarch}
+ linux-image-4.5.0-rc7-fibbing - Linux kernel, version 4.5.0-rc7-fibbing
+ linux-libc-dev - Linux support headers for userspace development
+Changes:
+ linux-4.5.0-rc7-fibbing (4.5.0-rc7-2) jessie; urgency=low
+ .
+   * Custom built Linux kernel.
+Checksums-Sha1:
+ eb05f59e9046760780613c718b2396dab23065e2 1185 linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.dsc
+ d79d666831ef164121998c7fc58cc0a1e3b8bdea 140251053 linux-4.5.0-rc7-fibbing_4.5.0-rc7-fibbing.orig.tar.gz
+ dca5ba8d2ef704f4ba68aeb75661b1c1e5f2ddab 1273 linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.debian.tar.gz
+ 20cd6d17024935fa2adec51e5858d3f57de21591 7048866 linux-headers-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb
+ e96d41781a6d5696468a72e6b01604010cd40b2a 831130 linux-libc-dev_4.5.0-rc7-2_amd64.deb
+ e90320c732dd27fc21ed300acf698d3dc53601d6 6276840 linux-image-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb
+Checksums-Sha256:
+ aa0e8c254b6c9f4633a289d5f09aeed26d18c2a60b55136eefcfe9ec146d1596 1185 linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.dsc
+ afd9292bf4e3ad77ae96a04bb364f34b25ee77d70b5fbddcfa3ecc2d366f9967 140251053 linux-4.5.0-rc7-fibbing_4.5.0-rc7-fibbing.orig.tar.gz
+ ae2504be0bb92202f940352e647d4a4c6a64184bffcd938043c09c87180706f5 1273 linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.debian.tar.gz
+ e56eeeabba332ba208809697332a1dd1d85f384c107ca303815208dd477d767b 7048866 linux-headers-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb
+ 57ec2afcb62b275adc79ee9de134e6e377769bbb54bc6bde9f85dc0b4319d9b8 831130 linux-libc-dev_4.5.0-rc7-2_amd64.deb
+ a9e83eeeae8640d21a48041ab483f6423cdb571cd49bbc3b902973e6ac4b9573 6276840 linux-image-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb
+Files:
+ ec081ed5abfaab443e9110153e3582e8 1185 kernel optional linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.dsc
+ 237e7cf5ae86684190f0b395d6a5a5b9 140251053 kernel optional linux-4.5.0-rc7-fibbing_4.5.0-rc7-fibbing.orig.tar.gz
+ cf2c878ba9465af3386423d6206e8b1b 1273 kernel optional linux-4.5.0-rc7-fibbing_4.5.0-rc7-2.debian.tar.gz
+ 93c7708539dfacf4316e6cf2cf67971c 7048866 kernel optional linux-headers-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb
+ 3e2b4d96015e7da0a5e5186741e8d3b2 831130 devel optional linux-libc-dev_4.5.0-rc7-2_amd64.deb
+ 27de07401500d8fe1dabcdeb26ae247f 6276840 kernel optional linux-image-4.5.0-rc7-fibbing_4.5.0-rc7-2_amd64.deb

@@ -1,0 +1,631 @@
+module segmentrouting {
+  /* name space */
+  namespace "http://tail-f.com/ns/example/segmentrouting";
+  prefix segmentrouting;
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  import tailf-xsd-types {
+    prefix xs;
+  }
+
+  import ietf-yang-types {
+    prefix "yang";
+  }
+
+
+  /** ospf interface from ietf standard YANG **/
+  grouping interface-common-config {
+    description "Common configuration for all types of interfaces,
+                 including virtual link and sham link";
+
+
+    leaf area {
+      type inet:ipv4-address;
+      default '0.0.0.0';
+      description "OSPF area";
+    }
+
+    leaf hello-interval {
+      type uint16 {
+        range "1..65535";
+      }
+      units seconds;
+      default '1';
+      description
+        "Time between hello packets.";
+    }
+
+    leaf dead-interval {
+      type uint16 {
+        range "1..65535";
+      }
+      default '5';
+      units seconds;
+      must "../dead-interval > ../hello-interval" {
+        error-message "The dead interval must be "
+                    + "larger than the hello interval";
+        description
+          "The value MUST be greater than 'hello-internval'.";
+      }
+      description
+        "Interval after which a neighbor is declared dead.";
+    }
+
+    container lsa {
+      leaf min_ls_interval {
+        type uint16 {
+          range "1..65535";
+        }
+        default '100';
+        description "LSA delay between transmissions (unit = msec)";
+      }
+
+      leaf min_ls_arrival {
+        type uint16 {
+          range "1..65535";
+        }
+        default '500';
+        description "Delay between sending LSAs (unit =  msec)";
+      }
+    }
+
+    container throttle {
+      description "LSA spf throttling (unit= msec): Throttles SPF recomputation";
+      leaf delay {
+        type uint8 {
+          range "0..255";
+        }
+        default '0';
+      }
+
+      leaf initial_holdtime {
+        type uint8 {
+          range "1..255";
+        }
+        default '1';
+      }
+
+      leaf max_holdtime {
+        type uint8 {
+          range "1..255";
+        }
+        default '1';
+      }
+    }
+
+    // DO NOT SUPPORT
+    /*leaf retransmit-interval {
+      type uint16 {
+        range "1..65535";
+      }
+      units seconds;
+      description
+        "Time between retransmitting unacknowledged Link State
+         Advertisements (LSAs).";
+    }*/
+
+
+    // DO NOT SUPPORT
+    /*leaf transmit-delay {
+      type uint16 {
+        range "1..65535";
+      }
+      units seconds;
+      description
+        "Estimated time needed to send link-state update.";
+    }*/
+
+    // DO NOT SUPPORT
+    /*leaf mtu-ignore {
+      if-feature mtu-ignore;
+      type boolean;
+      description
+        "Enable/Disable ignoring of MTU in DBD packets.";
+    }*/
+
+    // DO NOT SUPPORT
+    /*leaf lls {
+      if-feature lls;
+      type boolean;
+      description
+        "Enable/Disable link-local signaling (LLS) support.";
+    }*/
+
+    // DO NOT SUPPORT
+    /*leaf prefix-suppression {
+      if-feature prefix-suppression;
+      type boolean;
+      description
+        "Suppress advertisement of the prefixes.";
+    }*/
+
+    // DO NOT SUPPORT
+    /*leaf bfd {
+      if-feature bfd;
+      type boolean;
+      description
+        "Enable/disable bfd.";
+    }*/
+
+
+    // DO NOT SUPPORT
+    /*container ttl-security {
+      if-feature ttl-security;
+      description "TTL security check.";
+      leaf enable {
+        type boolean;
+        description
+          "Enable/Disable TTL security check.";
+      }
+      leaf hops {
+        type uint8 {
+          range "1..254";
+        }
+        description
+          "Maximum number of hops that a OSPF packet may
+           have traveled.";
+      }
+    }*/
+
+
+    /*leaf enable {
+      if-feature admin-control;
+      type boolean;
+      default true;
+      description
+        "Enable/disable protocol on the interface.";
+    }*/
+
+    /*container authentication {
+      description "Authentication configuration.";
+      choice auth-type-selection {
+        description
+          "Options for expressing authentication setting";
+        case auth-ipsec {
+          when "../../../../../rt:type = 'ospfv3'" {
+            description "Applied to OSPFv3 only";
+          }
+          if-feature ospfv3-authentication-ipsec;
+          leaf sa {
+              type string;
+              description
+                "SA name";
+          }
+        }
+        case auth-trailer-key-chain {
+          leaf key-chain {
+            type key-chain:key-chain-ref;
+             description
+              "key-chain name";
+            }
+          }
+        case auth-trailer-key {
+          leaf key {
+            type string;
+            description
+              "Key string in ASCII format.";
+          }
+          container crypto-algorithm {
+            uses key-chain:crypto-algorithm-types;
+            description
+              "Cryptographic algorithm associated with key.";
+          }
+        }
+      }
+    }*/
+  } // interface-common-config
+
+  // DO NOT SUPPORT
+  /*grouping interface-fast-reroute-config {
+    description
+      "This group defines interface configuration of IPFRR.";
+    container fast-reroute {
+      if-feature fast-reroute;
+
+      container lfa {
+        if-feature lfa;
+
+        leaf candidate-disabled {
+          type boolean;
+          description
+            "Prevent the interface to be used as backup.";
+        }
+        leaf enabled {
+          type boolean;
+          description
+            "Activates LFA.
+            This model assumes activation of per-prefix LFA.";
+        }
+        container remote-lfa {
+          if-feature remote-lfa;
+          leaf enabled {
+            type boolean;
+            description
+            "Activates remote LFA.";
+          }
+          description
+            "Remote LFA configuration.";
+        }
+        description
+          "LFA configuration.";
+      }
+      description
+        "Fast-reroute configuration.";
+    }
+  }// interface-fast-reroute-config
+  */
+
+
+
+  // DO NOT SUPPORT
+  /*grouping interface-config {
+    description "Configuration for real interfaces.";
+
+    leaf network-type {
+      type enumeration {
+        enum "broadcast" {
+          description
+            "Specify OSPF broadcast multi-access network.";
+        }
+        enum "non-broadcast" {
+          description
+            "Specify OSPF Non-Broadcast Multi-Access
+            (NBMA) network.";
+        }
+        enum "point-to-multipoint" {
+          description
+            "Specify OSPF point-to-multipoint network.";
+        }
+        enum "point-to-point" {
+          description
+            "Specify OSPF point-to-point network.";
+        }
+      }
+      description
+        "Network type.";
+    }
+
+    leaf passive {
+      type boolean;
+      description
+        "Enable/Disable passive.";
+    }
+
+    leaf demand-circuit {
+      if-feature demand-circuit;
+      type boolean;
+      description
+        "Enable/Disable demand circuit.";
+    }
+
+    container multi-area {
+      if-feature multi-area-adj;
+      description
+        "Configure ospf multi-area.";
+      leaf multi-area-id {
+        type area-id-type;
+        description
+          "Multi-area ID";
+      }
+      leaf cost {
+        type uint16;
+        description
+          "Interface cost for multi-area.";
+      }
+    }
+
+    container static-neighbors {
+      description "Static configured neighbors.";
+
+      list neighbor {
+        key "address";
+        description
+          "Specify a neighbor router.";
+
+        leaf address {
+          type inet:ip-address;
+          description "Neighbor IP address.";
+        }
+
+        leaf cost {
+          type uint16 {
+            range "1..65535";
+          }
+          description "Neighbor cost.";
+        }
+        leaf poll-interval {
+          type uint16 {
+            range "1..65535";
+          }
+          units seconds;
+          description "Neighbor poll interval.";
+        }
+        leaf priority {
+          type uint8 {
+            range "1..255";
+          }
+          description "Neighbor priority for DR election.";
+        }
+      }
+    }
+
+    leaf node-flag {
+      if-feature node-flag;
+      type boolean;
+      default false;
+      description
+        "Set prefix as a node representative prefix.";
+    }
+    uses interface-fast-reroute-config;
+    uses interface-common-config;
+  } // grouping interface-config
+  */
+
+  typedef state_req {
+    type enumeration {
+      enum 'running';
+      enum 'not-running';
+      enum 'scheduled';
+    }
+  }
+
+  typedef time {
+    type string {
+      pattern '((\d|[0-1]\d|2[0-3]):[0-5]\d)';
+    }
+  }
+
+  typedef weekday {
+    type enumeration {
+      enum 'Monday';
+      enum 'Tuesday';
+      enum 'Wednesday';
+      enum 'Thursday';
+      enum 'Friday';
+      enum 'Saturday';
+      enum 'Sunday';
+    }
+  }
+
+  typedef shedule-type {
+    type enumeration {
+      enum 'time';
+      enum 'bandwidth';
+      enum 'backup';
+    }
+  }
+
+  typedef ipv6-prefix {
+     type string {
+       pattern '((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+             + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+             + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+             + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))'
+             + '(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))';
+       pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+             + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+             + '(/.+)';
+     }
+  }
+
+  grouping link-endpoint {
+    leaf name {
+      type leafref {
+        path "/segment-routing/network/router/name";
+      }
+      description "Name of the router";
+    }
+
+
+    leaf ip {
+      type ipv6-prefix;
+      description "Ipv6 address for this interface ";
+    }
+  }
+
+  container segment-routing {
+    container network {
+      leaf restart {
+        type int32;
+      }
+
+      list router {
+        key "name";
+        leaf name {
+          type union {
+            type string;
+            type enumeration {
+              enum '*';
+            }
+          }
+          description "Name of the router";
+        }
+
+        leaf loopback-addr {
+          type ipv6-prefix;
+          description "Ipv6 address for this interface ";
+        }
+
+        container ospf {
+          leaf enable {
+            type boolean;
+            default false;
+          }
+
+          leaf router-id {
+            type inet:ipv4-address;
+            default '0.0.0.0';
+          }
+          /** loopback must be advertised via OSPF **/
+          uses interface-common-config;
+        }
+      }
+
+      list link {
+        key "name";
+        leaf name {
+          type string;
+          description "Name for the link connecting two routers";
+        }
+
+        container src {
+          uses link-endpoint;
+          must "name != '*'" {
+            error-message "* router must only be used for fibbing requirement";
+          }
+        }
+
+        container dest {
+          uses link-endpoint;
+          must "name != '*'" {
+            error-message "* router must only be used for fibbing requirement";
+          }
+        }
+
+        leaf cost {
+          type int32;
+          default 1;
+          description "IGP cost for the link connected to this interface";
+        }
+
+        leaf bw {
+          type int32;
+          default 100000;
+          description "bandwidth (in kbps) for the link connected to this interface ";
+        }
+
+        leaf delay {
+          type int32;
+          default 3;
+          description "delay (in miliseconds) for the link connected to this interface";
+        }
+
+      } /** link */
+
+
+      list ospf-link-config {
+        key 'link-name';
+        leaf link-name {
+          type leafref {
+            path "/segment-routing/network/link/name";
+          }
+        }
+
+        container src {
+          uses interface-common-config;
+        }
+
+        container dest {
+          uses interface-common-config;
+        }
+      }
+
+
+      list destinations {
+        key "name";
+        leaf name {
+          type leafref {
+            path "/segment-routing/network/router/name";
+          }
+        }
+      }
+
+      /** node that will act as the controller **/
+      leaf main-controller {
+        type leafref {
+          path "/segment-routing/network/router/name";
+        }
+      }
+
+
+    }
+
+
+    container sr-requirement {
+
+      leaf restart {
+        type int32;
+        description "Modifying the value of this variable will trigger a commit";
+      }
+
+
+      list requirement {
+        key "name";
+        leaf name {
+          type string;
+        }
+
+        leaf dest {
+          type leafref {
+            path "/segment-routing/network/destinations/name";
+          }
+        }
+
+
+        leaf-list Path {
+          type leafref {
+            path "/segment-routing/network/router/name";
+          }
+          ordered-by user;
+        }
+
+
+        leaf state {
+          type state_req;
+          default 'not-running';
+        }
+
+        container schedule {
+          leaf Type {
+            type shedule-type;
+            default 'time';
+          }
+          leaf start-hour {
+            type time;
+            default '0:00';
+          }
+
+          leaf end-hour {
+            type time;
+            default '23:59';
+
+          }
+
+          container link {
+            leaf bw-percentage {
+              type uint8 {
+                range "1..100";
+              }
+              default '100';
+            }
+
+            leaf from {
+              type leafref {
+                path "/segment-routing/network/router/name";
+              }
+            }
+
+            leaf to {
+              type leafref {
+                path "/segment-routing/network/router/name";
+              }
+            }
+          }
+
+          leaf-list days {
+            type weekday;
+          }
+
+        }
+
+
+      }
+
+    }
+  }
+
+
+}
