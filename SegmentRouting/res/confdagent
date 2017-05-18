@@ -11,7 +11,7 @@ name="ConfDAgent"
 # The path of the client executable
 command="/usr/bin/make"
 # Any command line arguments for the client executable
-command_args="start-daemon -C /home/sr6/MasterThesis/SegmentRouting/"
+command_args="start-daemon -C /home/sr6/NetworkManagerCLI/SegmentRouting/"
 # The path of the daemon executable
 daemon="/usr/local/bin/daemon"
 
