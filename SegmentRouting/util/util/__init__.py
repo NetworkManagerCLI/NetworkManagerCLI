@@ -2,7 +2,7 @@
 # SRDir = '/home/sr6/NetworkManagerCLI/SegmentRouting'
 import os
 UtilDir = os.path.dirname(__file__)
-SRDir = '%s/../..'
+SRDir = '%s/../..' % UtilDir
 # Network and controller manager
 NETWORK_port = 50001
 CONTROLLER_port = 60002

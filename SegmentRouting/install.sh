@@ -26,3 +26,4 @@ cd ../nanonet/
 sudo pip install -e .
 
 echo 'It may require to restart the VM to work properly'
+echo 'Or use systemctl daemon-reload'
