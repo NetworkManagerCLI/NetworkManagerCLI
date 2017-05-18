@@ -1646,7 +1646,7 @@ class NetworkManagerCore(object) :
         # calling update_flag_fct
         self.remove_set = []
         self.added_set = []
-        LOG.info('Begin transaction')
+        LOG.debug('Begin transaction')
         if update_flag_fct() :
             SuccessKeys = self.manager.commit_change()
 
@@ -1704,6 +1704,7 @@ class NetworkManagerCore(object) :
         self.remove_set = []
         self.added_set = []
         self.lock.release()
+        LOG.debug('End transaction')
 
 
     def halt_requirement(self) :
