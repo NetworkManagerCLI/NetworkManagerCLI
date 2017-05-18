@@ -17,4 +17,12 @@ chmod +x /etc/init.d/confdagent
 echo 'Installing Autotopo framework...'
 cd autotopo/
 sudo pip install -e .
+echo 'Installing NetworkManagerCore...'
+cd ../util/
+sudo pip install -e .
+
+echo 'Installing nanonet framework...'
+cd ../nanonet/
+sudo pip install -e .
+
 echo 'It may require to restart the VM to work properly'
