@@ -46,7 +46,7 @@ class Simplifier(object):
 		LabelsStack=list()
 		finish=True
 		while(finish):
-			node=self.start_function(Current_req,src,dst)
+			node=self.find_segments(Current_req,src,dst)
 			if(node!=False):
 				if(node[0]!=Finaldst or node[1] == 'adjacency' ):
 					attribute=node[1]
@@ -224,7 +224,7 @@ class Simplifier(object):
 			print(dst)
 			print(Current_req)
 			print(labelend)
-			node=self.start_function(Current_req,src,dst)
+			node=self.find_segments(Current_req,src,dst)
 			time.sleep(1)
 			print(node)
 			if(node!=False):
@@ -250,7 +250,7 @@ class Simplifier(object):
 		LOG.debug('output: %s' % str(LabelsStack))
 		return LabelsStack
 
-	def start_function(self,Current_req,src,dst):
+	def find_segments(self,Current_req,src,dst):
 		self.DijkstraDag(src)
 		ShortestPath=self.BuildPaths(src,dst)
 		if(self.isIncluded(ShortestPath,Current_req)):
