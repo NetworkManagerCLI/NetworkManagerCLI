@@ -46,7 +46,7 @@ clean-config:
 
 ######################################################################
 manager-CLI :
-	python main/main.py -c
+	python main.py -c
 
 session:
 	tmux new -s 'NetworkManager'
