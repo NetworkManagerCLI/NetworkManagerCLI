@@ -63,13 +63,6 @@ install:
 snmp-config:
 	./install-snmp.sh
 
-patch: southbound-main southbound-namespace
-
-southbound-main:
-	cp patch-fibbing/main.py /root/fibbingnode/fibbingnode/southbound/main.py
-
-southbound-namespace:
-	cp patch-fibbing/namespaces.py /root/fibbingnode/fibbingnode/southbound/namespaces.py
 ######################################################################
 gen-Abilene:
 	python netconf/AutoAbilene/build.py

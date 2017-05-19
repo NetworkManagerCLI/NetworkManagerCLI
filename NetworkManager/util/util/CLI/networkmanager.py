@@ -227,7 +227,6 @@ class NetworkManagerCore(object):
             LOG.debug(str(tr_out))
             tr_ip = self.parse_traceroute(tr_out)
 
-            LOG.debug(str(tr_ip))
             if len(tr_ip) == len(Req) +1 :
                 if str(self.ip_name_mapping[tr_ip[-1]]) == str(dest_traceroute):
                     index = 0
@@ -506,7 +505,6 @@ class NetworkManagerCore(object):
                         LOG.debug('Storing new requirements '+  str(x.get('name')))
 
                     elif str(x.get('status')) == str(SCHED) :
-                        LOG.debug('Schedule requirement : '+ str(x.get('status')))
                         newRequirement = Requirement(str(x.get('name')), ds, rs, Req, str(x.get('status')))
                         schedinfo = x.get('scheduled')
                         if schedinfo.get('type') == TIME :
@@ -568,7 +566,7 @@ class NetworkManagerCore(object):
                                 newRequirement.set_flag(F_Add)
                                 self.cache.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                 self.cache.get(str(x.get('name'))).set_flag(F_present)
-                                LOG.debug(' Diff req UP UP ')
+
 
                             elif self.cache.get(str(x.get('name'))).status == UP and newRequirement.status== SCHED :
                                 self.cache.get(str(x.get('name'))).set_flag(F_halt)
@@ -605,10 +603,10 @@ class NetworkManagerCore(object):
                                 newRequirement.set_flag(F_present)
                                 self.cache.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                 self.cache.get(str(x.get('name'))).set_flag(F_present)
-                                LOG.debug(' Diff req UP SCHED ')
+
 
                             elif self.cache.get(str(x.get('name'))).status == SCHED and newRequirement.status== UP :
-                                LOG.debug(' Diff req SCHED UP ')
+
                                 if self.cache.get(str(x.get('name'))).runningstatus == UP :
                                     self.cache.get(str(x.get('name'))).set_flag(F_halt)
                                     self.cache.get(str(x.get('name'))).set_flag(F_replace)
@@ -625,7 +623,7 @@ class NetworkManagerCore(object):
                                     self.cache.get(str(x.get('name'))).set_flag(F_present)
 
                             elif self.cache.get(str(x.get('name'))).status == SCHED and newRequirement.status== SCHED :
-                                LOG.debug(' Diff req SCHED SHED ')
+
                                 if self.cache.get(str(x.get('name'))).runningstatus == UP :
                                     self.cache.get(str(x.get('name'))).set_flag(F_halt)
                                     self.cache.get(str(x.get('name'))).set_flag(F_replace)
@@ -693,7 +691,7 @@ class NetworkManagerCore(object):
                                     newRequirement.set_flag(F_OK)
                                     self.cache.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                     self.cache.get(str(x.get('name'))).set_flag(F_present)
-                                    LOG.debug(' Diff req SCHED SHED ')
+
 
 
                         else :

@@ -510,7 +510,7 @@ class NetworkManagerCore(object) :
                                 newRequirement.set_flag(F_Add)
                                 self.store.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                 self.store.get(str(x.get('name'))).set_flag(F_present)
-                                LOG.debug(' Diff req UP UP ')
+
 
                             elif self.store.get(str(x.get('name'))).status == UP and newRequirement.status== SCHED :
                                 self.store.get(str(x.get('name'))).set_flag(F_halt)
@@ -547,10 +547,10 @@ class NetworkManagerCore(object) :
                                 newRequirement.set_flag(F_present)
                                 self.store.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                 self.store.get(str(x.get('name'))).set_flag(F_present)
-                                LOG.debug(' Diff req UP SCHED ')
+
 
                             elif self.store.get(str(x.get('name'))).status == SCHED and newRequirement.status== UP :
-                                LOG.debug(' Diff req SCHED UP ')
+
                                 if self.store.get(str(x.get('name'))).runningstatus == UP :
                                     self.store.get(str(x.get('name'))).set_flag(F_halt)
                                     self.store.get(str(x.get('name'))).set_flag(F_replace)
@@ -567,7 +567,7 @@ class NetworkManagerCore(object) :
                                     self.store.get(str(x.get('name'))).set_flag(F_present)
 
                             elif self.store.get(str(x.get('name'))).status == SCHED and newRequirement.status== SCHED :
-                                LOG.debug(' Diff req SCHED SHED ')
+
                                 if self.store.get(str(x.get('name'))).runningstatus == UP :
                                     self.store.get(str(x.get('name'))).set_flag(F_halt)
                                     self.store.get(str(x.get('name'))).set_flag(F_replace)
@@ -635,7 +635,7 @@ class NetworkManagerCore(object) :
                                     newRequirement.set_flag(F_OK)
                                     self.store.get(str(x.get('name'))).set_newRequirement(newRequirement)
                                     self.store.get(str(x.get('name'))).set_flag(F_present)
-                                    LOG.debug(' Diff req SCHED SHED ')
+
 
 
                         else :
