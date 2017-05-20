@@ -1,5 +1,5 @@
 # Contains in a centralised place all the global variable
-# SRDir = '/home/sr6/NetworkManagerCLI/SegmentRouting'
+
 import os
 UtilDir = os.path.dirname(__file__)
 SRDir = '%s/../..' % UtilDir
