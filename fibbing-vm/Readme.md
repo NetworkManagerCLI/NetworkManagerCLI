@@ -1,4 +1,4 @@
-# Fibbing Virtual Machine
+# Fibbing Virtual Machine from https://github.com/Fibbing
 
 This is the virtual image definition to get a Fibbing controller installation.
 
@@ -10,9 +10,6 @@ to target other provider (see Vagrant Documentation).
 # Building the VM
 
 ```bash
-DEST=fibbing-vm
-git clone https://github.com/Fibbing/virtual-machine.git ${DEST}
-cd ${DEST}
 ./install.sh
 ```
 
@@ -22,10 +19,15 @@ to run a Fibbing controller as well as use it in mininet experiments.
 
 When the build is complete, the VM will be started.
 
-To verify that build succeeded:
-1. You should be logged as root when connecting to the VM (prompt ending by #)
-2. `ls /root` should list: `fibbingnode  labs  mininet`
-3. `python -m fibbingnode` should successfully spawn a 'blank' controller instance.
+# Installing the Network Manager in the VM
+Once you are inside the VM (`vagrant ssh`), go into the main working directory
+```bash
+cd /Thesis/NetworkManager/
+```
+and run :
+```bash
+make install-all
+```
 
 # Accessing the VM
 
@@ -45,14 +47,3 @@ one via `git pull`), then run `vagrant up --provision` to rebuild it.
 
 `vagrant destroy` will stop it and destroy all files associated to it
 beside the Vagrantfile
-
-# Misc. Info
-
-When running the fibbingnode controller (e.g. sudo python -m fibbignode), be careful
-with what physical interface you specify to be captured by the controller.
-Capturing eth0 (to directly connect to a physical router for example) will
-break your ssh session (if any) and prevent the root network namespace (= where you
-land when accessing the VM via ssh) from accessing the outside networks.
-
-snmpd is available on the VM, and the community `__fibbing` as all access from
-any source prefix.

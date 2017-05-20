@@ -57,6 +57,8 @@ session-list:
 attach-session:
 	tmux a
 ######################################################################
+install-all: install snmp-config
+
 install:
 	./install.sh
 
