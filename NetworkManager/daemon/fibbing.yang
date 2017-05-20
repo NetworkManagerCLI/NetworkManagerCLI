@@ -99,6 +99,10 @@ module fibbing {
       }
     }
 
+    /**
+     * Other feature of the YANG OSPF model from IETF
+     * Uncomment to add these functionalities
+    **/
     // DO NOT SUPPORT
     /*leaf retransmit-interval {
       type uint16 {
@@ -221,6 +225,10 @@ module fibbing {
     }*/
   } // interface-common-config
 
+  /**
+   * Other feature of the YANG OSPF model from IETF
+   * Uncomment to add these functionalities
+  **/
   // DO NOT SUPPORT
   /*grouping interface-fast-reroute-config {
     description
@@ -367,6 +375,9 @@ module fibbing {
   } // grouping interface-config
   */
 
+  /**
+   * New types
+   */
 
   typedef state_req {
     type enumeration {
@@ -402,6 +413,19 @@ module fibbing {
     }
   }
 
+  typedef ipv4-prefix {
+     type string {
+       pattern
+          '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+        +  '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+        + '/(([0-9])|([1-2][0-9])|(3[0-2]))';
+     }
+   }
+
+  /**
+   * Grouping repsenting a link end point
+   * a link end point has a name and an ip address
+  **/
   grouping link-endpoint {
     leaf name {
       type leafref {
@@ -417,25 +441,32 @@ module fibbing {
     }
   }
 
-  typedef ipv4-prefix {
-     type string {
-       pattern
-          '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
-        +  '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
-        + '/(([0-9])|([1-2][0-9])|(3[0-2]))';
-     }
-   }
 
-  /** CLI for simple configuration of fibbing **/
+
+  /** Main container **/
   container fibbing {
+    /**
+     * This container serves to represent both the
+     * network configuration, and the requirements
+     * network configuration: see container network
+     * requirements configuration: see container fibbing-requirement
+    **/
 
     container network {
+      /**
+       * This container serves to represent
+       * nework related configurations
+      **/
 
+      // Since the ConfD Agent has a subsription point on the
+      // network container, modifying this restart variable and
+      // commit, will notify the subsription point
       leaf restart {
         type int32;
         description "Modifying the value of this variable will trigger a commit";
       }
 
+      // represents the routers present in the network
       list router {
         key "name";
         leaf name {
@@ -461,8 +492,12 @@ module fibbing {
         }
       } /* routers */
 
-
+      // represents the links present in the network
       list link {
+        /**
+         * A link is mainly composed of a
+         * unique name, a src and a dest
+         */
         key "name";
         leaf name {
           type string;
@@ -509,6 +544,10 @@ module fibbing {
       }
 
       list ospf-link-config {
+        /**
+         * allows to Specify the OSPF configuration
+         * for the src and dest interface of a link
+         */
         key 'link-name';
         leaf link-name {
           type leafref {
@@ -526,6 +565,10 @@ module fibbing {
       }
 
       container fibbing-controller {
+        /**
+         * Use links to declare Fibbing controller,
+         * and to connect them to existing routers
+         */
         list links {
           key "name";
           leaf name {
@@ -558,6 +601,10 @@ module fibbing {
         }
 
         container controller-config {
+          /**
+           * some configuration specific to
+           * the Fibbing Controller
+          **/
           container ospf-config {
             uses interface-common-config;
           }
@@ -574,6 +621,7 @@ module fibbing {
         }
       }
 
+      // use hosts-link to declare destinations
       list hosts-link {
         key "name";
         leaf name {
@@ -615,8 +663,16 @@ module fibbing {
 
 
 
-    /** CLI for simple configuration of  fibbing controller **/
+
     container fibbing-requirement {
+      /**
+       * This fibbing-requirement container serves to
+       * Specify requirements on the network
+      **/
+
+      // Since the ConfD Agent has a subsription point on the
+      // fibbing-requirement container, modifying this restart variable and
+      // commit, will notify the subsription point
       leaf restart {
         type int32;
         description "Modifying the value of this variable will trigger a commit";
@@ -624,6 +680,15 @@ module fibbing {
 
 
       list requirement {
+        /**
+         * list of the requirements
+         * Requirements have
+         *  name: unique identifier of the requirement
+         *  dest:  a destinations prefix
+         *  Path: the hop-by-hop path to be followed for the @dest
+         *  state: State of the requirement
+         *  schedule:  if state if scheduled
+        **/
         key "name";
         leaf name {
           type string;
@@ -649,6 +714,14 @@ module fibbing {
         }
 
         container schedule {
+          /**
+           * scheduled requirements have:
+           *  Type: idicating the type of scheduled requirement
+           *  start-hour: when the requirement should be deployed
+           *  end-hour:  when the requirement should be removed
+           *  days: during which days the requirement should be deployed
+           *  link: used for bandwidth or backup requirement type
+          **/
           leaf Type {
             type shedule-type;
             default 'time';
@@ -664,14 +737,20 @@ module fibbing {
 
           }
 
-          container link {
-            leaf bw-percentage {
-              type uint8 {
-                range "1..100";
-              }
-              default '100';
-            }
+          leaf-list days {
+            type weekday;
+          }
 
+          container link {
+            /**
+             * links have:
+             *  from: source router of the link
+             *  to: end router of the link
+             * bw-percentage: bandwidth percentage. Used to
+             *   indicate that when the bandwidth is above bw-percentage
+             *   for the link the corresponding requirement of Type bandwidth
+             *   must be deployed
+            **/
             leaf from {
               type leafref {
                 path "/fibbing/network/router/name";
@@ -683,10 +762,14 @@ module fibbing {
                 path "/fibbing/network/router/name";
               }
             }
-          }
 
-          leaf-list days {
-            type weekday;
+
+            leaf bw-percentage {
+              type uint8 {
+                range "1..100";
+              }
+              default '100';
+            }
           }
 
         }

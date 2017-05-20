@@ -96,6 +96,11 @@ module segmentrouting {
       }
     }
 
+    /**
+     * Other feature of the YANG OSPF model from IETF
+     * Uncomment to add these functionalities
+    **/
+
     // DO NOT SUPPORT
     /*leaf retransmit-interval {
       type uint16 {
@@ -218,6 +223,11 @@ module segmentrouting {
     }*/
   } // interface-common-config
 
+
+  /**
+   * Other feature of the YANG OSPF model from IETF
+   * Uncomment to add these functionalities
+  **/
   // DO NOT SUPPORT
   /*grouping interface-fast-reroute-config {
     description
@@ -364,6 +374,9 @@ module segmentrouting {
   } // grouping interface-config
   */
 
+  /**
+   * New types
+   */
   typedef state_req {
     type enumeration {
       enum 'running';
@@ -411,7 +424,12 @@ module segmentrouting {
      }
   }
 
+
   grouping link-endpoint {
+    /**
+     * Grouping repsenting a link end point
+     * a link end point has a name and an ip address
+    **/
     leaf name {
       type leafref {
         path "/segment-routing/network/router/name";
@@ -426,12 +444,29 @@ module segmentrouting {
     }
   }
 
+
+    /** Main container **/
   container segment-routing {
+    /**
+     * This container serves to represent both the
+     * network configuration, and the requirements
+     *  network configuration: see container network
+     *  requirements configuration: see container fibbing-requirement
+    **/
     container network {
+      /**
+       * This container serves to represent
+       * nework related configurations
+      **/
+
+      // Since the ConfD Agent has a subsription point on the
+      // network container, modifying this restart variable and
+      // commit, will notify the subsription point
       leaf restart {
         type int32;
       }
 
+      // represents the routers present in the network
       list router {
         key "name";
         leaf name {
@@ -464,7 +499,13 @@ module segmentrouting {
         }
       }
 
+
+      // represents the links present in the network
       list link {
+        /**
+         * A link is mainly composed of a
+         * unique name, a src and a dest
+         */
         key "name";
         leaf name {
           type string;
@@ -507,6 +548,10 @@ module segmentrouting {
 
 
       list ospf-link-config {
+        /**
+         * allows to Specify the OSPF configuration
+         * for the src and dest interface of a link
+         */
         key 'link-name';
         leaf link-name {
           type leafref {
@@ -525,6 +570,9 @@ module segmentrouting {
 
 
       list destinations {
+        /**
+         * used to Specify which are the destinations
+        **/
         key "name";
         leaf name {
           type leafref {
@@ -545,7 +593,15 @@ module segmentrouting {
 
 
     container sr-requirement {
+      /**
+       * This sr-requirement container serves to
+       * Specify requirements on the network
+      **/
 
+
+            // Since the ConfD Agent has a subsription point on the
+            // sr-requirement container, modifying this restart variable and
+            // commit, will notify the subsription point
       leaf restart {
         type int32;
         description "Modifying the value of this variable will trigger a commit";
@@ -553,6 +609,15 @@ module segmentrouting {
 
 
       list requirement {
+        /**
+         * list of the requirements
+         * Requirements have
+         *  name: unique identifier of the requirement
+         *  dest:  a destinations prefix
+         *  Path: the hop-by-hop path to be followed for the @dest
+         *  state: State of the requirement
+         *  schedule:  if state if scheduled
+        **/
         key "name";
         leaf name {
           type string;
@@ -579,6 +644,14 @@ module segmentrouting {
         }
 
         container schedule {
+          /**
+           * scheduled requirements have:
+           *  Type: idicating the type of scheduled requirement
+           *  start-hour: when the requirement should be deployed
+           *  end-hour:  when the requirement should be removed
+           *  days: during which days the requirement should be deployed
+           *  link: used for bandwidth or backup requirement type
+          **/
           leaf Type {
             type shedule-type;
             default 'time';
@@ -594,13 +667,20 @@ module segmentrouting {
 
           }
 
+          leaf-list days {
+            type weekday;
+          }
+
           container link {
-            leaf bw-percentage {
-              type uint8 {
-                range "1..100";
-              }
-              default '100';
-            }
+            /**
+             * links have:
+             *  from: source router of the link
+             *  to: end router of the link
+             * bw-percentage: bandwidth percentage. Used to
+             *   indicate that when the bandwidth is above bw-percentage
+             *   for the link the corresponding requirement of Type bandwidth
+             *   must be deployed
+            **/
 
             leaf from {
               type leafref {
@@ -613,11 +693,16 @@ module segmentrouting {
                 path "/segment-routing/network/router/name";
               }
             }
+
+            leaf bw-percentage {
+              type uint8 {
+                range "1..100";
+              }
+              default '100';
+            }
+
           }
 
-          leaf-list days {
-            type weekday;
-          }
 
         }
 
