@@ -224,6 +224,18 @@ class Edge(object):
 		self.delay == o.delay and\
 		self.bw == o.bw
 
+class OSPFEdge(Edge):
+	def __init__(self, node1, node2, port1, port2, cost, delay, bw, directed=None, cost1=None, cost2=None):
+		super(OSPFEdge, self).__init__(node1, node2, port1, port2, cost, delay, bw)
+		self.directed = False
+		self.cost1 = cost1
+		self.cost2 = cost2
+
+		if directed :
+			assert cost1 and cost2, 'Must have cost'
+			self.directed = True
+
+
 class Topo(object):
 	def __init__(self, config):
 		self.nodes = set()
@@ -317,10 +329,39 @@ class Topo(object):
 		self.edges.append(e)
 		return e
 
+	def add_link_directed(self, node1, node2,ip1, ip2,
+			port1=None, port2=None, cost=1, delay=None, bw=None,
+			directed=None, cost1=None, cost2=None):
+		if port1 is None:
+			port1 = node1.new_intf()
+		if port2 is None:
+			port2 = node2.new_intf()
+
+		node1.add_intf(port1)
+		node2.add_intf(port2)
+
+		node1.intfs_addr[port1] = ip1
+		node2.intfs_addr[port2] = ip2
+		if isinstance(node1, Host) :
+			node1.set_loopback(ip1)
+		if isinstance(node2, Host) :
+			node2.set_loopback(node2, ip2)
+
+
+		if delay is None:
+			delay = random.uniform(self.dmin, self.dmax)
+		if directed :
+			e = OSPFEdge(node1, node2, port1, port2, int(cost), delay, bw, directed=directed,cost1=cost1, cost2=cost2 )
+		else:
+			e = OSPFEdge(node1, node2, port1, port2, int(cost), delay, bw)
+		self.edges.append(e)
+		return e
+
 	def add_ospf_link(self, router1, router2,
 						ip1, ip2,
 						port1=None, port2=None,
 						cost=1, delay=None, bw=None,
+						directed=None, cost1=None, cost2=None,
 						**params ) :
 		"""
 			Add a OSPF link and configure the two interfaces
@@ -328,7 +369,7 @@ class Topo(object):
 		assert isinstance(router1, Router), 'router1 is not a OSPF Router'
 		assert isinstance(router2, Router), 'router2 is not a OSPF Router'
 
-		e = self.add_link(router1, router2,ip1,ip2,port1, port2,cost, delay, bw)
+		e = self.add_link_directed(router1, router2,ip1,ip2,port1, port2,cost, delay, bw,directed=directed, cost1=cost1, cost2=cost2)
 		param1 = params.get('params1', {})
 		param2 = params.get('params2', {})
 

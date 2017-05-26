@@ -22,7 +22,10 @@ class Graph:
         self.distances[(from_node, to_node)] = distance
         self.distances[(to_node, from_node)] = distance
 
-
+    def add_edge_unidirectional(self, from_node, to_node, distance) :
+        self.edges[from_node].append(to_node)
+        # self.edges[to_node].append(from_node)
+        self.distances[(from_node, to_node)] = distance
 
     def dijkstra(self, initial):
         visited = {initial: 0}
@@ -145,8 +148,13 @@ def complete_path(data, Requirement, destRouter) :
         if link.get('name') in ospf_link :
             src = link.get('src')
             dest = link .get('dest')
-            edges.append( (src.get('name'), dest.get('name'), int(link.get('cost'))))
-            edges.append( (dest.get('name'),src.get('name'), int(link.get('cost'))))
+            if link.get('bidirectional') :
+                edges.append( (src.get('name'), dest.get('name'), int(link.get('cost')), 'bidirectional'))
+                edges.append( (dest.get('name'),src.get('name'), int(link.get('cost')), 'bidirectional'))
+
+            else:
+                edges.append( (src.get('name'), dest.get('name'), int(src.get('cost')), 'unidirectional'))
+                edges.append( (dest.get('name'), src.get('name'), int(dest.get('cost')), 'unidirectional'))
 
 
     for i in range(len(Requirement)-1) :
@@ -166,8 +174,10 @@ def complete_path(data, Requirement, destRouter) :
         graph.add_node(router)
 
     for edge in edges :
-        # print edge
-        graph.add_edge(edge[0], edge[1], edge[2])
+        if edge[3] == 'unidirectional' :
+            graph.add_edge_unidirectional(edge[0], edge[1], edge[2])
+        else:
+            graph.add_edge(edge[0], edge[1], edge[2])
 
     try :
         Simple_path_req = get_simple_path_req(Requirement, destRouter, graph)

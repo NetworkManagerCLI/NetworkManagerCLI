@@ -46,7 +46,7 @@ class Simplifier(object):
 		LabelsStack=list()
 		finish=True
 		while(finish):
-			node=self.find_segments(Current_req,src,dst)
+			node=self.find_segment(Current_req,src,dst)
 			if(node!=False):
 				if(node[0]!=Finaldst or node[1] == 'adjacency' ):
 					attribute=node[1]
@@ -92,6 +92,18 @@ class Simplifier(object):
 
 		self.distances[(from_node, to_node)] = distance
 		self.distances[(to_node, from_node)] = distance
+
+	def add_edge_unidirectional(self, from_node, to_node, distance):
+		"""
+			@API
+		"""
+		if(from_node in self.edges):
+			self.edges[from_node].append(to_node)
+		else:
+			self.edges[from_node]=[to_node]
+
+
+		self.distances[(from_node, to_node)] = distance
 
 
 
@@ -224,7 +236,7 @@ class Simplifier(object):
 			print(dst)
 			print(Current_req)
 			print(labelend)
-			node=self.find_segments(Current_req,src,dst)
+			node=self.find_segment(Current_req,src,dst)
 			time.sleep(1)
 			print(node)
 			if(node!=False):
@@ -250,7 +262,7 @@ class Simplifier(object):
 		LOG.debug('output: %s' % str(LabelsStack))
 		return LabelsStack
 
-	def find_segments(self,Current_req,src,dst):
+	def find_segment(self,Current_req,src,dst):
 		self.DijkstraDag(src)
 		ShortestPath=self.BuildPaths(src,dst)
 		if(self.isIncluded(ShortestPath,Current_req)):
@@ -289,58 +301,3 @@ class Simplifier(object):
 			else:
 				nodes[edge2]+=1
 		return nodes
-
-
-if __name__ == '__main__':
-
-	routers = [
-        'A1',
-		'A2',
-		'B1',
-		'B2',
-		'S',
-		'D'
-    ]
-
-
-	edges = [
-	('A1', 'A2', 1),
-	('B1', 'B2', 1),
-	('A1', 'B1', 1),
-	('A2', 'B2', 3),
-	('S','A1',10),
-	('D','B2',10)
-    ]
-
-	Requirement = ['A1','A2','B2']
-
-	# routers = [
-	# 'A','B', 'C', 'D', 'Dest']
-	# edges = [
-	# ('A', 'B', 1),
-	# ('A', 'C', 1),
-	# ('D', 'B', 10),
-	# ('C', 'D', 1),
-	# ('D', 'Dest', 10)
-	# ]
-	# Requirement = ['A','B','D']
-
-    # build graph
-	Network = Simplifier()
-	for router in routers :
-		Network.add_node(router)
-
-	for edge in edges :
-		Network.add_edge(edge[0], edge[1], edge[2])
-
-
-	test=Network.Simplify(Requirement)
-	print(test)
-
-	def mapping_fct(x) :
-		if x[1].get('type') == 'normal' :
-			return x[0]
-		elif x[1].get('type') == 'adjacency' :
-			return list((x[1].get('prev') , x[0]))
-
-	Flatten = lambda List: [item for sublist in List for item in sublist]

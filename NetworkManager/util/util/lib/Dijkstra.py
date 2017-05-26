@@ -24,7 +24,6 @@ class Graph(object):
 
     def add_edge_unidirectional(self, from_node, to_node, distance) :
         self.edges[from_node].append(to_node)
-        self.edges[to_node].append(from_node)
         self.distances[(from_node, to_node)] = distance
 
     def dijkstra(self, initial):
@@ -148,7 +147,6 @@ def complete_path(data, Requirement, destRouter) :
         dest = OL .get('dest')
         if OL.get('bidirectional') :
             edges.append( (src.get('name'), dest.get('name'), int(OL.get('cost')), 'bidirectional'))
-            edges.append( (dest.get('name'),src.get('name'), int(OL.get('cost')), 'bidirectional'))
 
         else:
             edges.append( (src.get('name'), dest.get('name'), int(src.get('cost')), 'unidirectional'))

@@ -487,12 +487,18 @@ static int read_conf_Network(struct sockaddr_in *addr)
       cdb_get_int32(rsock, &cost, "/segment-routing/network/link[%d]/cost",i);
       cdb_get_int32(rsock, &delay, "/segment-routing/network/link[%d]/delay",i);
 
+      uint16_t src_cost, dest_cost;
+      cdb_get_u_int16(rsock, &src_cost, "/segment-routing/network/link[%d]/src/cost", i);
+      cdb_get_u_int16(rsock, &dest_cost, "/segment-routing/network/link[%d]/dest/cost", i);
+      int is_bidirectional;
+      cdb_get_bool(rsock, &is_bidirectional, "/segment-routing/network/link[%d]/bidirectional", i);
 
       strcat(buffer,"{\"src\":{");
       sprintf(tmpBuff,"\"name\":\"%.*s\",",
         src_name_len,src_name);
       strcat(buffer,tmpBuff);
-
+      sprintf(tmpBuff,"\"cost\" :%d,", src_cost);
+      strcat(buffer,tmpBuff);
       sprintf(tmpBuff,"\"ip\":\"%.*s\"},",src_ip_len, src_ip);
       strcat(buffer,tmpBuff);
 
@@ -500,13 +506,19 @@ static int read_conf_Network(struct sockaddr_in *addr)
       sprintf(tmpBuff,"\"name\" :\"%.*s\",",
         dest_name_len,dest_name);
       strcat(buffer,tmpBuff);
+      sprintf(tmpBuff,"\"cost\" :%d,", dest_cost);
+      strcat(buffer,tmpBuff);
       sprintf(tmpBuff,"\"ip\":\"%.*s\"},",dest_ip_len, dest_ip);
       strcat(buffer,tmpBuff);
 
       sprintf(tmpBuff, "\"name\":\"%.*s\",",
       link_name_len, link_name);
       strcat(buffer,tmpBuff);
-
+      if(is_bidirectional == 1) {
+      strcat(buffer,"\"bidirectional\" : true,");
+      }else {
+        strcat(buffer,"\"bidirectional\" : false,");
+      }
       sprintf(tmpBuff,"\"cost\":%d,",cost);
       strcat(buffer,tmpBuff);
       sprintf(tmpBuff,"\"bw\" :%d,",bw);

@@ -258,6 +258,8 @@ class NoSimplifier(object) :
         pass
     def add_edge(self, node1, node2, cost) :
         pass
+    def add_edge_unidirectional(self, node1, node2, cost) :
+        pass
 
 class SRSouthboundManager(object) :
     """
@@ -382,7 +384,12 @@ class SRSouthboundManager(object) :
             self.simplifier.add_node(node.name)
 
         for edge in self.network.topo.edges :
-            self.simplifier.add_edge(edge.node1.name, edge.node2.name, edge.cost)
+            if isinstance(edge, OSPFEdge) and edge.directed:
+
+                self.simplifier.add_edge_unidirectional(edge.node1.name, edge.node2.name, edge.cost1)
+                self.simplifier.add_edge_unidirectional(edge.node2.name, edge.node1.name, edge.cost2)
+            else :
+                self.simplifier.add_edge(edge.node1.name, edge.node2.name, edge.cost)
 
     def simplify(self, requirement, ingress) :
         """

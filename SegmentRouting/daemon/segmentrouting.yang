@@ -517,6 +517,15 @@ module segmentrouting {
           must "name != '*'" {
             error-message "* router must only be used for fibbing requirement";
           }
+
+          leaf cost {
+            type uint16 {
+              range "1..65535";
+            }
+            default '2';
+            description
+              "Interface cost.";
+          }
         }
 
         container dest {
@@ -524,8 +533,22 @@ module segmentrouting {
           must "name != '*'" {
             error-message "* router must only be used for fibbing requirement";
           }
+
+          leaf cost {
+            type uint16 {
+              range "1..65535";
+            }
+            default '2';
+            description
+              "Interface cost.";
+          }
         }
 
+        leaf bidirectional {
+          type boolean;
+          default true;
+        }
+        
         leaf cost {
           type int32;
           default 1;

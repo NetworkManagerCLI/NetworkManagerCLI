@@ -46,25 +46,42 @@ class IPv6Topo(Topo):
             socket.inet_pton(socket.AF_INET6, dest.get('ip').split('/')[0]))+'/'+dest.get('ip').split('/')[1]
             if link.get('name') in ospf_link :
                 o_l = ospf_link[link.get('name')]
+                src_cost = link.get('cost')
+                dest_cost = link.get('cost')
+                if not link.get('bidirectional') :
+                    src_cost = link.get('src').get('cost')
+                    dest_cost = link.get('dest').get('cost')
+
+
                 params1 = {
                     'area' : o_l.get('src').get('ospf').get('area'),
                     'hello-interval' :o_l.get('src').get('ospf').get('hello-interval'),
                     'dead-interval' : o_l.get('src').get('ospf').get('dead-interval'),
-                    'cost' :link.get('cost')
+                    'cost' :src_cost
                 }
                 params2 = params1 = {
                     'area' :o_l.get('dest').get('ospf').get('area'),
                     'hello-interval' :o_l.get('dest').get('ospf').get('hello-interval'),
                     'dead-interval' : o_l.get('dest').get('ospf').get('dead-interval'),
-                    'cost' :link.get('cost')
+                    'cost' :dest_cost
                 }
-
-                self.add_ospf_link(r1, r2,srcAddr, destAddr,
-                        cost=link.get('cost'),
-                        delay=link.get('delay'),
-                        bw=link.get('bw'),
-                        params1=params1,
-                        params2=params2)
+                if not link.get('bidirectional') :
+                    self.add_ospf_link(r1, r2,srcAddr, destAddr,
+                            cost=link.get('cost'),
+                            delay=link.get('delay'),
+                            bw=link.get('bw'),
+                            directed=True,
+                            cost1=int(src_cost),
+                            cost2=int(dest_cost),
+                            params1=params1,
+                            params2=params2)
+                else:
+                    self.add_ospf_link(r1, r2,srcAddr, destAddr,
+                            cost=link.get('cost'),
+                            delay=link.get('delay'),
+                            bw=link.get('bw'),
+                            params1=params1,
+                            params2=params2)
             else :
                 self.add_link(r1, r2,srcAddr, destAddr,
                         cost=link.get('cost'),
