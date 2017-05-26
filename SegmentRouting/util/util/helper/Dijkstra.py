@@ -20,6 +20,7 @@ class Graph:
         self.edges[from_node].append(to_node)
         self.edges[to_node].append(from_node)
         self.distances[(from_node, to_node)] = distance
+        self.distances[(to_node, from_node)] = distance
 
 
 
@@ -129,7 +130,7 @@ def complete_path(data, Requirement, destRouter) :
         function called by the NMCore to
         perform path expansion of :Requirement
 
-        :data is the network config from ConfD Agent 
+        :data is the network config from ConfD Agent
     """
 
     routers = []

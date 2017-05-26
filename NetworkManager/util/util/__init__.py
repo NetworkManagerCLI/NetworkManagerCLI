@@ -9,7 +9,6 @@ pathtoREScfg = '/root/fibbingnode/fibbingnode/res/default.cfg'
 template = 'res/template.cfg'
 TOPOlOGY_FILE = 'configfiles/topo.json'
 PRIVATEIPBINDING = 'private_ip_binding.json'
-# TODO change derive dir
 MDir = '%s/../../' % UtilDir
 # ConfD out files
 Fib_OUT = '%s/daemon/out/sr.json' % MDir

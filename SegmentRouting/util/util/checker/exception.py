@@ -223,7 +223,7 @@ def checkRequirementConfig(network, requirement) :
             or (src.get('name') == rs and dest.get('name') == ds) :
                 IS_OK = True
         if not IS_OK :
-            LOG.error('Destination ' + ds + ' is not connected to '+rs)
+            LOG.warning('Destination ' + ds + ' is not connected to '+rs)
             Error =True
 
         if str(x.get('status')) == SCHED:
