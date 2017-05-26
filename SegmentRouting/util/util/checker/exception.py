@@ -224,7 +224,7 @@ def checkRequirementConfig(network, requirement) :
                 IS_OK = True
         if not IS_OK :
             LOG.warning('Destination ' + ds + ' is not connected to '+rs)
-            Error =True
+            
 
         if str(x.get('status')) == SCHED:
             start_hour=x.get('scheduled').get('start-hour')

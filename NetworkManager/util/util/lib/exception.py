@@ -233,8 +233,8 @@ def checkRequirementConfig(d, d_req) :
                 IS_OK = True
 
         if not IS_OK :
-            LOG.error('Destination ' + ds + ' is not connected to '+ds)
-            Error =True
+            LOG.warning('Destination ' + ds + ' is not connected to '+ds)
+            
         if str(x.get('status')) == SCHED:
             start_hour=x.get('scheduled').get('start-hour')
             end_hour=x.get('scheduled').get('end-hour')
