@@ -43,8 +43,8 @@ class Test(Topo) :
         self.add_edge_by_type('Amst', 'ATLA', DEST_LINK)
 
 
-        
-        self.set_controller('China')
+
+        self.set_controller('Ctrl')
 
 
 class Simulation(SimulationSchedule) :
