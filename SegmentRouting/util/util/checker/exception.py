@@ -199,8 +199,7 @@ def checkRequirementConfig(network, requirement) :
     """
 
     Error = False
-    # TODO : build function that check the config,
-    # TODO : call checker function here
+    
 
     conf = requirement['config']
     link =  conf["link"]
@@ -224,7 +223,7 @@ def checkRequirementConfig(network, requirement) :
                 IS_OK = True
         if not IS_OK :
             LOG.warning('Destination ' + ds + ' is not connected to '+rs)
-            
+
 
         if str(x.get('status')) == SCHED:
             start_hour=x.get('scheduled').get('start-hour')
