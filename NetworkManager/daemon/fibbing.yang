@@ -508,12 +508,30 @@ module fibbing {
           must "name != '*'" {
             error-message "* router must only be used for fibbing requirement";
           }
+
+          leaf cost {
+            type uint16 {
+              range "1..65535";
+            }
+            default '2';
+            description
+              "Interface cost.";
+          }
         }
 
         container dest {
           uses link-endpoint;
           must "name != '*'" {
             error-message "* router must only be used for fibbing requirement";
+          }
+
+          leaf cost {
+            type uint16 {
+              range "1..65535";
+            }
+            default '2';
+            description
+              "Interface cost.";
           }
         }
 
@@ -531,6 +549,12 @@ module fibbing {
           description
             "Interface cost.";
         }
+
+        leaf bidirectional {
+          type boolean;
+          default true;
+        }
+
 
         /* TODO Vlan ID support */
         /*leaf VlanID {

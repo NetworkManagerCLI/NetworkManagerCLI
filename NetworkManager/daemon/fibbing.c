@@ -538,9 +538,17 @@ static int read_conf_Network(struct sockaddr_in *addr)
       cdb_get_int32(rsock, &bw, "/fibbing/network/link[%d]/bw", i );
       cdb_get_u_int16(rsock, &cost, "/fibbing/network/link[%d]/cost", i);
 
+      uint16_t src_cost, dest_cost;
+      cdb_get_u_int16(rsock, &src_cost, "/fibbing/network/link[%d]/src/cost", i);
+      cdb_get_u_int16(rsock, &dest_cost, "/fibbing/network/link[%d]/dest/cost", i);
+      int is_bidirectional;
+      cdb_get_bool(rsock, &is_bidirectional, "/fibbing/network/link[%d]/bidirectional", i);
+
       strcat(buffer,"{\"src\": {");
       sprintf(tmpBuff,"\"name\" :\"%.*s\", ",
         src_name_len,src_name);
+      strcat(buffer,tmpBuff);
+      sprintf(tmpBuff,"\"cost\" :%d,", src_cost);
       strcat(buffer,tmpBuff);
 
       sprintf(tmpBuff, "\"ip\" : \"%.*s\"},",src_ip_len, src_ip );
@@ -549,9 +557,16 @@ static int read_conf_Network(struct sockaddr_in *addr)
       sprintf(tmpBuff,"\"name\" :\"%.*s\", ",
         dest_name_len,dest_name);
       strcat(buffer,tmpBuff);
+      sprintf(tmpBuff,"\"cost\" :%d,", dest_cost);
+      strcat(buffer,tmpBuff);
 
       sprintf(tmpBuff, "\"ip\" : \"%.*s\"},", dest_ip_len, dest_ip);
       strcat(buffer,tmpBuff);
+      if(is_bidirectional == 1) {
+        strcat(buffer,"\"bidirectional\" : true,");
+      }else {
+        strcat(buffer,"\"bidirectional\" : false,");
+      }
       sprintf(tmpBuff, "\"bw\" : %d,\"cost\" : %d,", bw, cost);
       strcat(buffer,tmpBuff);
       sprintf(tmpBuff,"\"name\" :\"%.*s\"} ",

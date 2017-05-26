@@ -61,8 +61,15 @@ class CustomTopo(IPTopo):
             src_intfName  = src.get('intf')
             dest_intfName = dest.get('intf')
 
+            src_cost = int(ol.get('cost'))
+            dest_cost= int(ol.get('cost'))
+            if not ol.get('bidirectional') :
+                src_cost = int(ol.get('src').get('cost'))
+                dest_cost= int(ol.get('dest').get('cost'))
+
+
             src_params = {
-                'cost' : int(ol.get('cost')),
+                'cost' : src_cost,
                 'bw' : int(ol.get('bw')),
                 'ip' : src.get('ip'),
                 PRIVATE_IP_KEY : src.get('private-ip'),
@@ -79,7 +86,7 @@ class CustomTopo(IPTopo):
             }
 
             dest_params = {
-                'cost' : int(ol.get('cost')),
+                'cost' : dest_cost,
                 'bw' : int(ol.get('bw')),
                 'ip' : dest.get('ip'),
                 PRIVATE_IP_KEY : dest.get('private-ip'),

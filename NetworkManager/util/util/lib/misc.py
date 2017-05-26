@@ -347,10 +347,13 @@ def gen_private_ips(config) :
         link = link_key_map.get(o_l.get('name'))
         tmp['bw'] = link.get('bw')
         tmp['cost'] = link.get('cost')
+        tmp['bidirectional'] = link.get('bidirectional')
         tmp['src']['ip'] = link.get('src').get('ip')
         tmp['src']['name'] = link.get('src').get('name')
+        tmp['src']['cost'] = link.get('src').get('cost')
         tmp['dest']['ip'] = link.get('dest').get('ip')
         tmp['dest']['name'] = link.get('dest').get('name')
+        tmp['dest']['cost'] = link.get('dest').get('cost')
         if link.get('src').get('name') not in router_port_map :
             router_port_map[link.get('src').get('name')] = 0
         else :
