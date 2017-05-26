@@ -113,6 +113,12 @@ class Topo(object):
         elif link_type == CTRL_LINK :
             self.add_ctrl_link_by_name(src,dest)
 
+    def set_controller(self, node) :
+        """
+            Unified API for two solutions  
+        """
+        self.specify_main_controller(node)
+
     def specify_main_controller(self, node) :
         assert self.get_node(node), "Node must be declared as a Host"
 

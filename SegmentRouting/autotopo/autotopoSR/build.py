@@ -6,36 +6,87 @@ import os
 buildpath = os.path.dirname(__file__)
 
 class Test(Topo) :
+    """
+        API:
+        - self.add_edge_by_type(src, dest, OSPF_LINK, cost, bw):
+            :src and :dest type string, :cost and :bw (in Kbps) type int
+            declare a link with OSPF enabled
+        - self.add_edge_by_type(src, dest, DEST_LINK):
+            :src and :dest type string
+            declare a link between destination (:src attribute) and
+            router (:dest attribute)
+        - self.set_controller(ctrl):
+            :ctrl an existing destination that will act as the main controller
+
+    """
     def build(self) :
-        self.add_link_by_name('NEWY', 'CHIC', True, cost=1)
-        self.add_link_by_name('LOSA', 'HOUS', True, cost=1)
-        self.add_link_by_name('LOSA', 'SEAT', True, cost=1)
-        self.add_link_by_name('LOSA', 'SALT', True, cost=1)
-        self.add_link_by_name('SEAT', 'SALT', True, cost=1)
-        self.add_link_by_name('SALT', 'KANS', True, cost=1)
-        self.add_link_by_name('KANS', 'CHIC', True, cost=1)
-        self.add_link_by_name('CHIC', 'WASH', True, cost=1)
-        self.add_link_by_name('NEWY', 'WASH', True, cost=1)
-        self.add_link_by_name('WASH', 'ATLA', True, cost=1)
-        self.add_link_by_name('ATLA', 'HOUS', True, cost=1)
-        self.add_link_by_name('HOUS', 'KANS', True, cost=1)
+        self.add_edge_by_type('NEWY', 'CHIC', OSPF_LINK, cost=1)
+        self.add_edge_by_type('LOSA', 'HOUS', OSPF_LINK, cost=1)
+        self.add_edge_by_type('LOSA', 'SEAT', OSPF_LINK, cost=1)
+        self.add_edge_by_type('LOSA', 'SALT', OSPF_LINK, cost=1)
+        self.add_edge_by_type('SEAT', 'SALT', OSPF_LINK, cost=1)
+        self.add_edge_by_type('SALT', 'KANS', OSPF_LINK, cost=1)
+        self.add_edge_by_type('KANS', 'CHIC', OSPF_LINK, cost=1)
+        self.add_edge_by_type('CHIC', 'WASH', OSPF_LINK, cost=1)
+        self.add_edge_by_type('NEWY', 'WASH', OSPF_LINK, cost=1)
+        self.add_edge_by_type('WASH', 'ATLA', OSPF_LINK, cost=1)
+        self.add_edge_by_type('ATLA', 'HOUS', OSPF_LINK, cost=1)
+        self.add_edge_by_type('HOUS', 'KANS', OSPF_LINK, cost=1)
 
 
-        self.add_link_by_name('Ctrl', 'HOUS', True, cost=1)
+        self.add_edge_by_type('Ctrl', 'HOUS', OSPF_LINK)
 
-        self.add_link_by_name('Hawaii', 'LOSA', True)
-        self.add_link_by_name('Sidney', 'LOSA', True)
-        self.add_link_by_name('China', 'SEAT', True)
-        self.add_link_by_name('London', 'NEWY', True)
-        self.add_link_by_name('Amst', 'ATLA', True)
+        self.add_edge_by_type('Hawaii', 'LOSA', DEST_LINK)
+        self.add_edge_by_type('Sidney', 'LOSA', DEST_LINK)
+        self.add_edge_by_type('China', 'SEAT', DEST_LINK)
+        self.add_edge_by_type('London', 'NEWY', DEST_LINK)
+        self.add_edge_by_type('Amst', 'ATLA', DEST_LINK)
 
 
-        self.set_destination('Hawaii')
-        self.set_destination('Sidney')
+        
         self.set_controller('China')
 
 
 class Simulation(SimulationSchedule) :
+    """
+        API:
+        - Requirement(dest,  Path):
+            :dest type string, :Path type array of string
+            create a simple requirement for destinations :dest and
+            with Path :Path (can use the * router in the Path)
+        - Requirement.set_state(state):
+            :state global variale
+            and must be included in [RUNNING, NOTRUNNING, SCHED]
+        - Requirement.set_type(type)
+            :type global variale and must be included
+            in [SCHEDTIME, SCHEDBACKUP, SCHEDBW]
+        - Requirement.set_start_time(time) (resp. set_end_time(time)) :
+            :time string following time format hh:mm (e.g. 10:42)
+            indicate the start (resp. end) time for the requirement
+        - Requirement.set_days(days):
+            :days array of global variale, that must be included in
+            [MONDAY, TUESDAY,WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+        - Link(from, to):
+            :from and :to type string
+            declare a link between source (:from) router and
+            destination (:to) router
+        - Link.set_bw(bw):
+            :bw an integer between 0 and 100
+            indicate the bandwidth threshold in percent
+        - Requirement.set_link(link):
+            :link type Link
+            an existing link
+
+
+        - self.add_requirement(requirement):
+            :requirement type Requirement
+            add :requirement to schedule
+
+        - self.next_timestamp():
+            indicates that all following requirements will be added
+            in a new configuration file (until the next call to self.next_timestamp())
+
+    """
     def build_requirement(self):
         # configuring a simple requirement
         Req1 = Requirement('Hawaii',  ['NEWY' , 'CHIC', '*', 'LOSA'])

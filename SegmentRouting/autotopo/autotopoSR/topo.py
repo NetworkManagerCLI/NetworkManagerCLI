@@ -9,6 +9,9 @@ def render(filename, node, dest) :
         f.write(text)
         f.close()
 
+# Types:
+DEST_LINK = 1
+OSPF_LINK = 2
 class SimulationSchedule(object) :
     def __init__(self, dirname) :
         self.filename_base = 'requirement-'
@@ -76,6 +79,17 @@ class Topo(object) :
             def set_controller
         """
         pass
+
+    def add_edge_by_type(self, src, dest, link_type, cost=None, bw=None) :
+        """
+            Unified API for two solutions
+        """
+        assert link_type in [OSPF_LINK,DEST_LINK], "Error type does not exist"
+        if link_type == OSPF_LINK :
+            self.add_link_by_name(src,dest,ospf_enabled=True,cost=cost,bw=bw)
+        elif link_type == DEST_LINK :
+            self.add_link_by_name(src,dest,ospf_enabled=True,cost=cost,bw=bw)
+            self.set_destination(src)
 
 
     def add_link_by_name(self, src, dest, ospf_enabled=True, cost=None, bw=None):

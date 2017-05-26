@@ -7,6 +7,23 @@ import os
 buildpath = os.path.dirname(__file__)
 
 class Test(Topo) :
+    """
+        API:
+        - self.add_edge_by_type(src, dest, OSPF_LINK, cost, bw):
+            :src and :dest type string, :cost and :bw (in Mbps) type int
+            declare a link with OSPF enabled
+        - self.add_edge_by_type(src, dest, DEST_LINK):
+            :src and :dest type string
+            declare a link between destination (:src attribute) and
+            router (:dest attribute)
+        - self.add_edge_by_type(src, dest, CTRL_LINK):
+            :src and :dest type string
+            declare a link between Fibbing controller (:src attribute) and
+            router (:dest attribute)
+        - self.set_controller(ctrl):
+            :ctrl an existing destination that will act as the main controller
+
+    """
     def build(self) :
         self.add_edge_by_type('A', 'B', OSPF_LINK, 10, 100)
         self.add_edge_by_type('A', 'C', OSPF_LINK, 1, 100)
@@ -21,11 +38,50 @@ class Test(Topo) :
         self.add_edge_by_type('C2', 'B', CTRL_LINK)
 
 
-        self.specify_main_controller('Ctrl')
+        self.set_controller('Ctrl')
 
 
 
 class Simulation(SimulationSchedule) :
+    """
+        API:
+        - Requirement(dest,  Path):
+            :dest type string, :Path type array of string
+            create a simple requirement for destinations :dest and
+            with Path :Path (can use the * router in the Path)
+        - Requirement.set_state(state):
+            :state global variale
+            and must be included in [RUNNING, NOTRUNNING, SCHED]
+        - Requirement.set_type(type)
+            :type global variale and must be included
+            in [SCHEDTIME, SCHEDBACKUP, SCHEDBW]
+        - Requirement.set_start_time(time) (resp. set_end_time(time)) :
+            :time string following time format hh:mm (e.g. 10:42)
+            indicate the start (resp. end) time for the requirement
+        - Requirement.set_days(days):
+            :days array of global variale, that must be included in
+            [MONDAY, TUESDAY,WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+        - Link(from, to):
+            :from and :to type string
+            declare a link between source (:from) router and
+            destination (:to) router
+        - Link.set_bw(bw):
+            :bw an integer between 0 and 100
+            indicate the bandwidth threshold in percent
+        - Requirement.set_link(link):
+            :link type Link
+            an existing link
+
+
+        - self.add_requirement(requirement):
+            :requirement type Requirement
+            add :requirement to schedule
+
+        - self.next_timestamp():
+            indicates that all following requirements will be added
+            in a new configuration file (until the next call to self.next_timestamp())
+
+    """
     def build_requirement(self):
         # configuring a simple requirement
         Req1 = Requirement('Hawaii',  ['NEWY' , 'CHIC', '*', 'LOSA'])
@@ -58,7 +114,7 @@ class Simulation(SimulationSchedule) :
         Req4.set_end_time('23:30')
         Req4.set_days([MONDAY, TUESDAY,WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY])
 
-        # configuring link with bw at 50%
+
         link =  ReqLink('ATLA', 'HOUS')
         link.set_bw(50)
         Req4.set_link(link)
@@ -71,7 +127,7 @@ class Simulation(SimulationSchedule) :
         Req5.set_end_time('23:30')
         Req5.set_days([MONDAY, TUESDAY,WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY])
 
-        # configuring link with bw at 50%
+
         link =  ReqLink('ATLA', 'HOUS')
         Req5.set_link(link)
         self.add_requirement(Req5)
