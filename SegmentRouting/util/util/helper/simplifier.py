@@ -110,6 +110,32 @@ class Simplifier(object):
 	# --------------------------------------------
 	#    		Lib functions
 	# --------------------------------------------
+	def find_segment(self,Current_req,src,dst):
+		self.DijkstraDag(src)
+		ShortestPath=self.BuildPaths(src,dst)
+		if(self.isIncluded(ShortestPath,Current_req)):
+			degree=self.degreeToBig(ShortestPath,Current_req)
+			if(not degree[0]):
+				return (dst,'normal')
+			else:
+				Req=list()
+				for x in Current_req:
+					if x[0] not in Req:
+						Req.append(x[0])
+					if x[1] not in Req:
+						Req.append(x[1])
+					if(len(Current_req)==1):
+						return (dst, 'adjacency')
+				indexreturn=Req.index(degree[1])-1
+				return (Req[indexreturn],'normal')
+
+		else:
+			if(len(Current_req)==1):
+				return (dst, 'adjacency')
+			else:
+				return False
+
+
 	def DijkstraDag(self, initial):
 		nodes = set(self.nodes)
 
@@ -170,7 +196,6 @@ class Simplifier(object):
 
 	def BuildPathsHelper(self,src,dst,edges,path):
 		if(src!=dst):
-			self.DijkstraDag(src)
 			if(src in edges):
 				for x in edges[src]:
 					path.append((src,x))
@@ -262,30 +287,7 @@ class Simplifier(object):
 		LOG.debug('output: %s' % str(LabelsStack))
 		return LabelsStack
 
-	def find_segment(self,Current_req,src,dst):
-		self.DijkstraDag(src)
-		ShortestPath=self.BuildPaths(src,dst)
-		if(self.isIncluded(ShortestPath,Current_req)):
-			degree=self.degreeToBig(ShortestPath,Current_req)
-			if(not degree[0]):
-				return (dst,'normal')
-			else:
-				Req=list()
-				for x in Current_req:
-					if x[0] not in Req:
-						Req.append(x[0])
-					if x[1] not in Req:
-						Req.append(x[1])
-					if(len(Current_req)==1):
-						return (dst, 'adjacency')
-				indexreturn=Req.index(degree[1])-1
-				return (Req[indexreturn],'normal')
 
-		else:
-			if(len(Current_req)==1):
-				return (dst, 'adjacency')
-			else:
-				return False
 
 	def Degrees(self, Path):
 		nodes={}
