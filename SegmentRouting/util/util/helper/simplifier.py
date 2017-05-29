@@ -29,6 +29,7 @@ class Simplifier(object):
 		self.edges = {}
 		self.distances = {}
 		self.path = {}
+		self.cache = {}
 
 	def Simplify(self,Req):
 		"""
@@ -110,32 +111,6 @@ class Simplifier(object):
 	# --------------------------------------------
 	#    		Lib functions
 	# --------------------------------------------
-	def find_segment(self,Current_req,src,dst):
-		self.DijkstraDag(src)
-		ShortestPath=self.BuildPaths(src,dst)
-		if(self.isIncluded(ShortestPath,Current_req)):
-			degree=self.degreeToBig(ShortestPath,Current_req)
-			if(not degree[0]):
-				return (dst,'normal')
-			else:
-				Req=list()
-				for x in Current_req:
-					if x[0] not in Req:
-						Req.append(x[0])
-					if x[1] not in Req:
-						Req.append(x[1])
-					if(len(Current_req)==1):
-						return (dst, 'adjacency')
-				indexreturn=Req.index(degree[1])-1
-				return (Req[indexreturn],'normal')
-
-		else:
-			if(len(Current_req)==1):
-				return (dst, 'adjacency')
-			else:
-				return False
-
-
 	def DijkstraDag(self, initial):
 		nodes = set(self.nodes)
 
@@ -171,12 +146,12 @@ class Simplifier(object):
 		self.path = previous
 
 
-	def Dic(self):
+	def Dic(self, src):
 		edges=set()
 		dicEdges={}
-		for n in self.path:
-			if(self.path[n]):
-				for x in self.path[n]:
+		for n in self.cache[src]:
+			if(self.cache[src][n]):
+				for x in self.cache[src][n]:
 					edges.add((x,n))
 		for In,Out in edges:
 			if In not in dicEdges:
@@ -205,8 +180,8 @@ class Simplifier(object):
 
 
 	def BuildPaths(self,src,dst):
-		edges=self.Dic()
-		edgesBack=self.path
+		edges=self.Dic(src)
+		edgesBack=self.cache[src]
 		path=list()
 		Paths=self.BuildPathsHelper(src,dst,edges,path)
 		path=list()
@@ -246,48 +221,32 @@ class Simplifier(object):
 				return False
 		return True
 
-	def Simplifier(self,Req,dest):
-		Current_req=self.RewriteReq(Req)
-		Finalsrc=Req[0]
-		Finaldst=dest
-		src=Finalsrc
-		dst=Finaldst
-		labelend=len(Current_req)
-		LabelsStack=list()
-		finish=True
-		while(finish):
-			print('-------')
-			print(src)
-			print(dst)
-			print(Current_req)
-			print(labelend)
-			node=self.find_segment(Current_req,src,dst)
-			time.sleep(1)
-			print(node)
-			if(node!=False):
-				if(node[0]!=Finaldst or node[1] == 'adjacency' ):
-					attribute=node[1]
-					newDest=node[0]
-					dico={'type' : attribute}
-					if(attribute=='adjacency'):
-						dico['prev']=src
-					LabelsStack.append((newDest, dico))
-					src=node[0]
-					dst=Finaldst
-					src_index=Req.index(src)
-					dst_index=Req.index(dst)
-					Current_req=Req[src_index:dst_index+1]
-					Current_req=self.RewriteReq(Current_req)
-				else:
-					finish=False
+	def find_segment(self,Current_req,src,dst):
+		if src not in self.cache :
+			self.DijkstraDag(src)
+			self.cache[src] = self.path
+		ShortestPath=self.BuildPaths(src,dst)
+		if(self.isIncluded(ShortestPath,Current_req)):
+			degree=self.degreeToBig(ShortestPath,Current_req)
+			if(not degree[0]):
+				return (dst,'normal')
 			else:
-				Current_req.pop()
-				print(Current_req)
-				dst=Current_req[-1][-1]
-		LOG.debug('output: %s' % str(LabelsStack))
-		return LabelsStack
+				Req=list()
+				for x in Current_req:
+					if x[0] not in Req:
+						Req.append(x[0])
+					if x[1] not in Req:
+						Req.append(x[1])
+					if(len(Current_req)==1):
+						return (dst, 'adjacency')
+				indexreturn=Req.index(degree[1])-1
+				return (Req[indexreturn],'normal')
 
-
+		else:
+			if(len(Current_req)==1):
+				return (dst, 'adjacency')
+			else:
+				return False
 
 	def Degrees(self, Path):
 		nodes={}
