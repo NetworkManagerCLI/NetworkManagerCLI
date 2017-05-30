@@ -12,6 +12,7 @@ class Graph(object):
         self.edges = defaultdict(list)
         self.distances = {}
         self.path = {}
+        self.dag = {}
 
     def add_node(self, value):
         self.nodes.add(value)
@@ -29,7 +30,7 @@ class Graph(object):
     def dijkstra(self, initial):
         visited = {initial: 0}
         path = {}
-
+        dag = {}
         nodes = set(self.nodes)
 
         while nodes:
@@ -49,21 +50,41 @@ class Graph(object):
 
             for edge in self.edges[min_node]:
               weight = current_weight + self.distances[(min_node, edge)]
-              if edge not in visited or weight < visited[edge]:
+              if edge not in visited or weight <= visited[edge]:
                 visited[edge] = weight
                 path[edge] = min_node
+                if edge not in dag :
+                    dag[edge] = [min_node]
+                else :
+                    dag[edge].append( min_node)
 
-#   return visited, path
         self.path = path
+        self.dag = dag
+
+    def build_path_from_dag(self, source, dest) :
+        s, u = deque(), dest
+        while u != source and self.dag[u]:
+            s.appendleft(u)
+            if len(self.dag[u]) == 1 :
+                u = self.dag[u][0]
+            else :
+                # Tie breaker
+                nodes = sorted(self.dag[u])
+                u = nodes[0]
+
+        s.appendleft(u)
+        return s
+
 
 
     def build_path(self,source, dest) :
-        s, u = deque(), dest
-        while u != source and self.path[u]:
-            s.appendleft(u)
-            u = self.path[u]
-        s.appendleft(u)
-        return s
+        return self.build_path_from_dag(source, dest)
+        # s, u = deque(), dest
+        # while u != source and self.path[u]:
+        #     s.appendleft(u)
+        #     u = self.path[u]
+        # s.appendleft(u)
+        # return s
 
 
 def get_simple_path_req(Requirement, destRouter, graph) :
