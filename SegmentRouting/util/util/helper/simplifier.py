@@ -231,14 +231,15 @@ class Simplifier(object):
 			if(not degree[0]):
 				return (dst,'normal')
 			else:
+				if(len(Current_req)==1):
+					return (dst, 'adjacency')
 				Req=list()
 				for x in Current_req:
 					if x[0] not in Req:
 						Req.append(x[0])
 					if x[1] not in Req:
 						Req.append(x[1])
-					if(len(Current_req)==1):
-						return (dst, 'adjacency')
+
 				indexreturn=Req.index(degree[1])-1
 				return (Req[indexreturn],'normal')
 
