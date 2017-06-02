@@ -3,6 +3,15 @@ import os
 import subprocess
 from subprocess import Popen, PIPE
 
+## DBG variable :
+# * set DBG to True to locally test how the
+#   controller operates without needing to
+#   actual start a network, create name space etc.
+#   This will actually prevent any terminal commands
+#   to be run by the controller.
+# NB: you could use this mode if you don't have the
+#     proper Kernel with SR-IPv6 support but still want
+#     to have an idea of how the controller works 
 DBG=False
 # ConfD out files
 SR_OUT = '%s/daemon/out/sr.json' % SRDir
